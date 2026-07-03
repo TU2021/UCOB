@@ -1,0 +1,172 @@
+# UCOB local runtime files and generated artifacts
+env.sh
+.env
+.env.*
+.claude/
+.vscode/
+.cursor_monitor*
+*.ports
+appworld_ports.ports
+.tmp/
+tmp/
+logs/
+log/
+*.log
+*.out
+nohup.out
+
+# Training outputs
+checkpoints/
+outputs/
+swanlog/
+wandb/
+experiments/
+models/
+playground/
+
+# Large local datasets, model/data downloads, and paper/reference workspaces
+data/
+dataset/
+references/
+ICLR_2027/
+*.parquet
+*.jsonl.gz
+*.index
+
+# Checkpoint/model binaries
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.tar.gz
+*.lock
+
+# Open-source export boundary: keep the public repo focused on UCOB.
+.github/workflows/
+.github/dependabot.yml
+.readthedocs.yaml
+analysis_metrics.md
+docs/
+recipe/
+examples/*_trainer/
+!examples/ucob_trainer/
+!examples/ucob_trainer/**
+examples/deprecated/
+examples/env_server/
+examples/generation/
+examples/prompt_agent/
+examples/ray/
+examples/sft/
+examples/slurm/
+examples/split_placement/
+scripts/*.sh
+agent_system/environments/env_package/appworld/
+agent_system/environments/env_package/gym_cards/
+agent_system/environments/env_package/sokoban/
+agent_system/environments/prompts/appworld.py
+agent_system/environments/prompts/gym_cards.py
+agent_system/environments/prompts/sokoban.py
+agent_system/environments/env_package/webshop/webshop/web_agent_site/envs/chromedriver
+agent_system/environments/env_package/alfworld/alfworld/gen/planner/pddl.pdf
+skills/appworld/
+skills/sokoban/
+
+**/wget-log
+**/_build/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+tensorflow/my_graph/*
+.idea/
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+# env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+tmp/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+# virtualenv
+venv/
+.venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+
+# Rope project settings
+.ropeproject
+
+# Mac
+.DS_Store
+
+# vim
+*.swp

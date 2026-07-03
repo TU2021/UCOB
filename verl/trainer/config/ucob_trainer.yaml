@@ -1,0 +1,180 @@
+defaults:
+  - ppo_trainer
+  - _self_
+
+data:
+  max_prompt_length: 8192
+  max_response_length: 512
+  filter_overlong_prompts: True
+  truncation: error
+  return_raw_chat: True
+  apply_chat_template_kwargs:
+    enable_thinking: false
+
+actor_rollout_ref:
+  model:
+    use_remove_padding: True
+    enable_gradient_checkpointing: True
+  actor:
+    optim:
+      lr: 1e-6
+    ppo_mini_batch_size: 64
+    ppo_micro_batch_size_per_gpu: 8
+    entropy_coeff: 0.0
+    use_kl_loss: True
+    kl_loss_coef: 0.01
+    kl_loss_type: low_var_kl
+    fsdp_config:
+      param_offload: False
+      optimizer_offload: False
+    use_invalid_action_penalty: True
+    invalid_action_penalty_coef: 0.1
+  rollout:
+    log_prob_micro_batch_size_per_gpu: 16
+    tensor_model_parallel_size: 1
+    name: vllm
+    top_p: 1.0
+    max_model_len: 10240
+    gpu_memory_utilization: 0.6
+    enable_chunked_prefill: False
+    enforce_eager: False
+    free_cache_engine: False
+    val_kwargs:
+      temperature: 0.4
+      top_p: 1.0
+      do_sample: True
+  ref:
+    log_prob_micro_batch_size_per_gpu: 16
+    fsdp_config:
+      param_offload: True
+
+algorithm:
+  adv_estimator: gigpo
+  gamma: 0.95
+  use_kl_in_reward: False
+  credit_assignment: False
+  gigpo:
+    step_advantage_w: 1.0
+    mode: mean_norm
+    enable_similarity: False
+  filter_groups:
+    enable: False
+  dsdar:
+    teacher_loss_enable: false
+    sdar_coef: 0.0
+    rollout_mode: mixed
+    adaptive_enable: false
+    topk_enable: false
+    action_loss_mask_enable: false
+  analysis:
+    case_study_debug_enable: false
+    case_study_debug_dir: outputs/case_study_debug
+    case_study_debug_max_per_step: 8
+    case_study_debug_min_gap: 0.05
+    case_study_debug_include_prompts: false
+    case_study_debug_include_full_trajectory: false
+  ucob:
+    cbsd:
+      enable: true
+      coef: 0.1
+      action_mask_enable: true
+      margin: 0.05
+      tau: 0.2
+      weight_max: 2.0
+      max_pairs_per_group: 2
+      source_branches: [good, none]
+      target_policy: opposite
+      loss_type: topk_opd
+      opd_granularity: turn
+      opd_scope: response
+      topk_k: 32
+      gate_enable: true
+      gate_beta: 5.0
+      topk_norm_to_one: true
+      topk_clip_log_ratio: false
+      action_weight: 2.0
+      max_turns_per_trajectory: 0
+    skill_memory:
+      enable: true
+      filepath: outputs/dynamic_memory/ucob_full/reflections.json
+      skill_format: claude_style
+      category_filter: false
+      top_k: 3
+      eval_top_k: 3
+      dual_pool_retrieval: true
+      memory_pool_mode: both
+      task_top_k: 3
+      state_top_k: 3
+      eval_task_top_k: 3
+      eval_state_top_k: 3
+      alpha: 0.1
+      beta: 0.2
+      task_utility_beta: 0.2
+      state_utility_beta: 0.2
+      retrieve_type: ucb
+      ucb_scale: 0.1
+      filter_type: both
+      write_enable: true
+      validate_success: true
+      utility_update: baseline_relative
+      initial_utility_score: 0.0
+      similarity_backend: sentence_transformer
+      model_name: sentence-transformers/all-MiniLM-L6-v2
+      relevance_threshold: 0.4
+      similarity_top_m: 10
+      counterfactual_mode: no_memory
+      retrieval_query_mode: task_state
+      state_aware_retrieval: true
+      step_utility_tau: 1.0
+      max_context_tokens: 4096
+      reflection_max_prompt_tokens: 8192
+      prompt_template_reserve_tokens: 128
+      step_reflection_enable: true
+      step_reflection_per_group: 1
+      step_reflection_min_gap: 0.05
+      merge_exact_task_attempt: false
+      max_lessons_per_task_attempt: 4
+      max_trajectory_steps: 50
+      max_reflection_items: 6
+      reflection_per_group: 1
+      reflection_selection: group_task
+      reflection_max_response_length: 2048
+      reflection_temperature: 1.0
+      reflection_top_p: 1.0
+      reflection_backend: vllm
+    reflection:
+      reflection_train_enable: true
+      reflection_train_source: current_step_used_memory
+      reflection_train_warmup_steps: 30
+      reflection_train_max_task_samples_per_step: 16
+      reflection_train_max_state_samples_per_step: 16
+      reflection_train_min_lifetime_count_task: 1
+      reflection_train_min_lifetime_count_state: 1
+      reflection_train_min_abs_utility: 0.02
+      reflection_reward_mode: batch_zscore
+      reflection_advantage_group_by: memory_pool
+      reflection_advantage_eps: 0.05
+      reflection_advantage_clip: 2.0
+      reflection_train_mini_batch_size: 16
+      reflection_train_response_length: 2048
+      reflection_loss_weight: 1.0
+
+env:
+  seed: 0
+  require_thinking: false
+  max_steps: 50
+  rollout:
+    n: 8
+  resources_per_worker:
+    num_cpus: 0.1
+
+trainer:
+  critic_warmup: 0
+  logger: [console, swanlab]
+  n_gpus_per_node: 8
+  ray_wait_register_center_timeout: 600
+  nnodes: 1
+  save_freq: 20
+  max_ckpt_to_keep: 5
+  test_freq: 5
+  total_epochs: 150

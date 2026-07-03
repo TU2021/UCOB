@@ -1,0 +1,70 @@
+{
+  "skill_files": {
+    "general_skills": "general_skills.md",
+    "direct_retrieval": "direct_retrieval.md",
+    "multi_hop_reasoning": "multi_hop_reasoning.md",
+    "entity_attribute_lookup": "entity_attribute_lookup.md",
+    "compare": "compare.md"
+  },
+  "task_to_skill": {
+    "search": "search",
+    "direct_retrieval": "direct_retrieval",
+    "multi_hop_reasoning": "multi_hop_reasoning",
+    "entity_attribute_lookup": "entity_attribute_lookup",
+    "compare": "compare"
+  },
+  "task_keywords": {
+    "compare": [
+      "compare",
+      "earlier",
+      "later",
+      "older",
+      "younger",
+      "larger",
+      "smaller",
+      "higher",
+      "lower",
+      "more",
+      "less",
+      "difference between"
+    ],
+    "multi_hop_reasoning": [
+      "the director of",
+      "the author of",
+      "the creator of",
+      "the spouse of",
+      "the father of",
+      "the mother of",
+      "born in the same",
+      "located in the country",
+      "capital of the country",
+      "what is the name of the"
+    ],
+    "entity_attribute_lookup": [
+      "birthplace",
+      "birth place",
+      "date of birth",
+      "release date",
+      "population",
+      "capital",
+      "located",
+      "founded",
+      "headquarters",
+      "nationality",
+      "occupation"
+    ],
+    "direct_retrieval": [
+      "what is",
+      "who was",
+      "who is",
+      "when was",
+      "where was",
+      "where is",
+      "name the",
+      "give the"
+    ],
+    "search": [
+      "?"
+    ]
+  }
+}

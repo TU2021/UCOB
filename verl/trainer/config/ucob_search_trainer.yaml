@@ -1,0 +1,49 @@
+defaults:
+  - ucob_trainer
+  - _self_
+
+data:
+  train_batch_size: 128
+  val_batch_size: 512
+  max_prompt_length: 8192
+  max_response_length: 512
+  truncation: left
+
+actor_rollout_ref:
+  actor:
+    optim:
+      lr_warmup_steps_ratio: 0.1
+    ppo_mini_batch_size: 256
+    ppo_micro_batch_size_per_gpu: 16
+    kl_loss_coef: 0.001
+    invalid_action_penalty_coef: 0.01
+  rollout:
+    log_prob_micro_batch_size_per_gpu: 32
+  ref:
+    log_prob_micro_batch_size_per_gpu: 32
+
+algorithm:
+  gigpo:
+    mode: mean_std_norm
+    enable_similarity: true
+    similarity_thresh: 0.9
+  ucob:
+    skill_memory:
+      skill_mapping_dir: skills/search
+      max_trajectory_steps: 4
+      max_reflection_items: 4
+
+env:
+  env_name: search
+  max_steps: 4
+  history_length: 4
+  search:
+    search_url: http://0.0.0.0:8000/retrieve
+    eval_metric_mode: trajectory
+
+trainer:
+  n_gpus_per_node: 8
+  save_freq: 50
+  test_freq: 50
+  total_training_steps: 150
+  val_before_train: True
